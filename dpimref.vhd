@@ -3,6 +3,7 @@
 ----------------------------------------------------------------------------
 -- Author:  Gene Apperson
 --          Copyright 2004 Digilent, Inc.
+-- Edited and adapted: Vadim Radu 2015
 ----------------------------------------------------------------------------
 -- IMPORTANT NOTE ABOUT BUILDING THIS LOGIC IN ISE
 --
@@ -36,14 +37,7 @@
 --		astb		- address strobe
 --		dstb		- data strobe
 --		pwr			- data direction (described in reference manual as WRITE)
---		pwait		- transfer synchronization (described in reference manual
---						as WAIT)
---		rgLed		- LED outputs to the DIO4
---		rgSwt		- switch inputs from the DIO4
---		ldb			- led gate signal for the DIO4
---		rgBtn		- button inputs from the DIO4
---		btn			- button on system board (D2SB or D2FT)
---		led			- led on the system board
+--		pwait		- transfer synchronization (described in reference manual as WAIT)
 --		
 ----------------------------------------------------------------------------
 -- Revision History:
@@ -64,18 +58,12 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity dpimref is
     Port (
-		mclk 	: in std_logic;
+	mclk 	: in std_logic;
         pdb		: inout std_logic_vector(7 downto 0);
         astb 	: in std_logic;
         dstb 	: in std_logic;
         pwr 	: in std_logic;
         pwait 	: out std_logic;
-		rgLed	: out std_logic_vector(7 downto 0); 
-		rgSwt	: in std_logic_vector(7 downto 0);
-		rgBtn	: in std_logic_vector(4 downto 0);
-		btn		: in std_logic;
-		ldg		: out std_logic;
-		led		: out std_logic
 	);
 end dpimref;
 
@@ -136,13 +124,12 @@ architecture Behavioral of dpimref is
 	signal	regEppAdr	: std_logic_vector(3 downto 0);
 	signal	regData0	: std_logic_vector(7 downto 0);
 	signal	regData1	: std_logic_vector(7 downto 0);
-    signal  regData2	: std_logic_vector(7 downto 0);
-    signal  regData3	: std_logic_vector(7 downto 0);
-    signal  regData4	: std_logic_vector(7 downto 0);
+    	signal  regData2	: std_logic_vector(7 downto 0);
+    	signal  regData3	: std_logic_vector(7 downto 0);
+    	signal  regData4	: std_logic_vector(7 downto 0);
 	signal	regData5	: std_logic_vector(7 downto 0);
 	signal	regData6	: std_logic_vector(7 downto 0);
 	signal	regData7	: std_logic_vector(7 downto 0);
-	signal	regLed		: std_logic_vector(7 downto 0);
 
 	signal	cntr		: std_logic_vector(23 downto 0); 
 
@@ -174,21 +161,16 @@ begin
 	-- Select either address or data onto the internal output data bus.
 	busEppOut <= "0000" & regEppAdr when ctlEppAstb = '0' else busEppData;
 
-	rgLed <= regLed;
-	ldg <= '1';
-
 	-- Decode the address register and select the appropriate data register
 	busEppData <=	regData0 when regEppAdr = "0000" else
-					regData1 when regEppAdr = "0001" else
-					regData2 when regEppAdr = "0010" else
-					regData3 when regEppAdr = "0011" else
-					regData4 when regEppAdr = "0100" else
-					regData5 when regEppAdr = "0101" else
-					regData6 when regEppAdr = "0110" else
-					regData7 when regEppAdr = "0111" else
-					rgSwt    when regEppAdr = "1000" else
-					"000" & rgBtn when regEppAdr = "1001" else
-					"00000000";
+			regData1 when regEppAdr = "0001" else
+			regData2 when regEppAdr = "0010" else
+			regData3 when regEppAdr = "0011" else
+			regData4 when regEppAdr = "0100" else
+			regData5 when regEppAdr = "0101" else
+			regData6 when regEppAdr = "0110" else
+			regData7 when regEppAdr = "0111" else
+			"00000000";
 
     ------------------------------------------------------------------------
 	-- EPP Interface Control State Machine
@@ -381,32 +363,6 @@ begin
 				if ctlEppDwr = '1' and regEppAdr = "0111" then
 					regData7 <= busEppIn;
 				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "1010" then
-					regLed <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-
-	------------------------------------------------------------------------
-    -- Gate array configuration verification logic
-	------------------------------------------------------------------------
-	-- This logic will flash the led on the gate array. This is to verify
-	-- that the gate array is properly configured for the test. This is a
-	-- simple way to verify that the gate array actually got configured.
-
- 	led <= btn or cntr(23);
-
-	process (clkMain)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				cntr <= cntr + 1;
 			end if;
 		end process;
 
