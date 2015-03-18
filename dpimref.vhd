@@ -288,74 +288,10 @@ begin
 		begin
 			if clkMain = '1' and clkMain'Event then
 				if ctlEppDwr = '1' and regEppAdr = "0000" then
-					regData0 <= busEppIn;
+					regData(regEppAdr) <= busEppIn;
 				end if;
 			end if;
 		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0001" then
-					regData1 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0010" then
-					regData2 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0011" then
-					regData3 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0100" then
-					regData4 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0101" then
-					regData5 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0110" then
-					regData6 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0111" then
-					regData7 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
 ----------------------------------------------------------------------------
 
 end Behavioral;
