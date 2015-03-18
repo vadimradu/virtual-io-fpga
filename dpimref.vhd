@@ -57,6 +57,9 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 entity dpimref is
+    Generic (
+    	addr_width : integer := 4;
+    	addr : integer :=16;
     Port (
 	mclk 	: in std_logic;
         pdb		: inout std_logic_vector(7 downto 0);
@@ -121,18 +124,11 @@ architecture Behavioral of dpimref is
 	signal	busEppData	: std_logic_vector(7 downto 0);
 
 	-- Registers
-	signal	regEppAdr	: std_logic_vector(3 downto 0);
-	signal	regData0	: std_logic_vector(7 downto 0);
-	signal	regData1	: std_logic_vector(7 downto 0);
-    	signal  regData2	: std_logic_vector(7 downto 0);
-    	signal  regData3	: std_logic_vector(7 downto 0);
-    	signal  regData4	: std_logic_vector(7 downto 0);
-	signal	regData5	: std_logic_vector(7 downto 0);
-	signal	regData6	: std_logic_vector(7 downto 0);
-	signal	regData7	: std_logic_vector(7 downto 0);
-
-	signal	cntr		: std_logic_vector(23 downto 0); 
-
+	signal	regEppAdr	: std_logic_vector(7 downto 0) := (others => '0');
+	--array of data registers
+	type vector_array is array (0 to addr-1) of std_logic_vector( 7 downto 0);
+	signal	regData		: vector_array;
+	
 ------------------------------------------------------------------------
 -- Module Implementation
 ------------------------------------------------------------------------
@@ -159,17 +155,11 @@ begin
 	pdb <= busEppOut when ctlEppWr = '1' and ctlEppDir = '1' else "ZZZZZZZZ";
 
 	-- Select either address or data onto the internal output data bus.
-	busEppOut <= "0000" & regEppAdr when ctlEppAstb = '0' else busEppData;
+	busEppOut <= "00000000" or regEppAdr when ctlEppAstb = '0' else busEppData;
 
 	-- Decode the address register and select the appropriate data register
-	busEppData <=	regData0 when regEppAdr = "0000" else
-			regData1 when regEppAdr = "0001" else
-			regData2 when regEppAdr = "0010" else
-			regData3 when regEppAdr = "0011" else
-			regData4 when regEppAdr = "0100" else
-			regData5 when regEppAdr = "0101" else
-			regData6 when regEppAdr = "0110" else
-			regData7 when regEppAdr = "0111" else
+	busEppData <=	regData(regEppAdr) else
+			
 			"00000000";
 
     ------------------------------------------------------------------------
@@ -278,7 +268,7 @@ begin
 		begin
 			if clkMain = '1' and clkMain'Event then
 				if ctlEppAwr = '1' then
-					regEppAdr <= busEppIn(3 downto 0);
+					regEppAdr(addr_width - 1 downto 0) <= busEppIn(addr_width - 1 downto 0);
 				end if;
 			end if;
 		end process;
