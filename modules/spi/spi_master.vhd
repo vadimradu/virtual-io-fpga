@@ -32,7 +32,6 @@ ENTITY spi_master IS
     d_width : INTEGER := 8); --data bus width
   PORT(
     clock   : IN     STD_LOGIC;                             --system clock
-    reset_n : IN     STD_LOGIC;                             --asynchronous reset
     enable  : IN     STD_LOGIC;                             --initiate transaction
     cpol    : IN     STD_LOGIC;                             --spi clock polarity
     cpha    : IN     STD_LOGIC;                             --spi clock phase
