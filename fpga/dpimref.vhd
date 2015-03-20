@@ -127,9 +127,6 @@ architecture Behavioral of dpimref is
 
 	-- Registers
 	signal	regEppAdr	: std_logic_vector(7 downto 0) := (others => '0');
-	--array of data registers
-	type vector_array is array (0 to addr-1) of std_logic_vector( 7 downto 0);
-	signal	regData		: vector_array;
 	
 ------------------------------------------------------------------------
 -- Module Implementation
