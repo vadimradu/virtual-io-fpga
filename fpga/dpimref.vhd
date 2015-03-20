@@ -50,21 +50,23 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
-
+use ieee.numeric_std.all;
 --  Uncomment the following lines to use the declarations that are
 --  provided for instantiating Xilinx primitive components.
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
 entity dpimref is
+    Generic (
+    	addr_width : integer := 8;
+    	addr : integer :=16);
     Port (
 	mclk 	: in std_logic;
         pdb		: inout std_logic_vector(7 downto 0);
         astb 	: in std_logic;
         dstb 	: in std_logic;
         pwr 	: in std_logic;
-        pwait 	: out std_logic;
-	);
+        pwait 	: out std_logic);
 end dpimref;
 
 architecture Behavioral of dpimref is
@@ -121,18 +123,11 @@ architecture Behavioral of dpimref is
 	signal	busEppData	: std_logic_vector(7 downto 0);
 
 	-- Registers
-	signal	regEppAdr	: std_logic_vector(3 downto 0);
-	signal	regData0	: std_logic_vector(7 downto 0);
-	signal	regData1	: std_logic_vector(7 downto 0);
-    	signal  regData2	: std_logic_vector(7 downto 0);
-    	signal  regData3	: std_logic_vector(7 downto 0);
-    	signal  regData4	: std_logic_vector(7 downto 0);
-	signal	regData5	: std_logic_vector(7 downto 0);
-	signal	regData6	: std_logic_vector(7 downto 0);
-	signal	regData7	: std_logic_vector(7 downto 0);
-
-	signal	cntr		: std_logic_vector(23 downto 0); 
-
+	signal	regEppAdr	: std_logic_vector(7 downto 0) := (others => '0');
+	--array of data registers
+	type vector_array is array (0 to addr-1) of std_logic_vector( 7 downto 0);
+	signal	regData		: vector_array;
+	
 ------------------------------------------------------------------------
 -- Module Implementation
 ------------------------------------------------------------------------
@@ -159,18 +154,10 @@ begin
 	pdb <= busEppOut when ctlEppWr = '1' and ctlEppDir = '1' else "ZZZZZZZZ";
 
 	-- Select either address or data onto the internal output data bus.
-	busEppOut <= "0000" & regEppAdr when ctlEppAstb = '0' else busEppData;
+	busEppOut <= "00000000" or regEppAdr when ctlEppAstb = '0' else busEppData;
 
 	-- Decode the address register and select the appropriate data register
-	busEppData <=	regData0 when regEppAdr = "0000" else
-			regData1 when regEppAdr = "0001" else
-			regData2 when regEppAdr = "0010" else
-			regData3 when regEppAdr = "0011" else
-			regData4 when regEppAdr = "0100" else
-			regData5 when regEppAdr = "0101" else
-			regData6 when regEppAdr = "0110" else
-			regData7 when regEppAdr = "0111" else
-			"00000000";
+	busEppData <=	regData(conv_integer(unsigned(regEppAdr)));
 
     ------------------------------------------------------------------------
 	-- EPP Interface Control State Machine
@@ -278,7 +265,7 @@ begin
 		begin
 			if clkMain = '1' and clkMain'Event then
 				if ctlEppAwr = '1' then
-					regEppAdr <= busEppIn(3 downto 0);
+					regEppAdr(addr_width - 1 downto 0) <= busEppIn(addr_width - 1 downto 0);
 				end if;
 			end if;
 		end process;
@@ -298,74 +285,10 @@ begin
 		begin
 			if clkMain = '1' and clkMain'Event then
 				if ctlEppDwr = '1' and regEppAdr = "0000" then
-					regData0 <= busEppIn;
+					regData(conv_integer(unsigned(regEppAdr))) <= busEppIn;
 				end if;
 			end if;
 		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0001" then
-					regData1 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0010" then
-					regData2 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0011" then
-					regData3 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0100" then
-					regData4 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0101" then
-					regData5 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0110" then
-					regData6 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
-	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
-		begin
-			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0111" then
-					regData7 <= busEppIn;
-				end if;
-			end if;
-		end process;
-
 ----------------------------------------------------------------------------
 
 end Behavioral;
