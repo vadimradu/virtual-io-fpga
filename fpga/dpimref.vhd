@@ -51,6 +51,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use ieee.numeric_std.all;
+
+use work.reg_spec.all;
 --  Uncomment the following lines to use the declarations that are
 --  provided for instantiating Xilinx primitive components.
 --library UNISIM;
@@ -66,7 +68,8 @@ entity dpimref is
         astb 	: in std_logic;
         dstb 	: in std_logic;
         pwr 	: in std_logic;
-        pwait 	: out std_logic);
+        pwait 	: out std_logic;
+		  data_regs : inout data_regs_array);
 end dpimref;
 
 architecture Behavioral of dpimref is
@@ -157,7 +160,7 @@ begin
 	busEppOut <= "00000000" or regEppAdr when ctlEppAstb = '0' else busEppData;
 
 	-- Decode the address register and select the appropriate data register
-	busEppData <=	regData(conv_integer(unsigned(regEppAdr)));
+	busEppData <=	data_regs(conv_integer(unsigned(regEppAdr))).data;
 
     ------------------------------------------------------------------------
 	-- EPP Interface Control State Machine
@@ -285,7 +288,7 @@ begin
 		begin
 			if clkMain = '1' and clkMain'Event then
 				if ctlEppDwr = '1' and regEppAdr = "0000" then
-					regData(conv_integer(unsigned(regEppAdr))) <= busEppIn;
+					data_regs(conv_integer(unsigned(regEppAdr))).data <= busEppIn;
 				end if;
 			end if;
 		end process;
