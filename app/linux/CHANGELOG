@@ -1,0 +1,134 @@
+Adept Software Development Kit (SDK) for Linux Change Log
+=========================================================
+
+Adept SDK for Linux v2.3.1 (04/19/2013):
+	1. The following modifications were made to the include files:
+		dpcdecl.h
+			- The definitions of the following symbols were changed from
+			  "const DWORD" to "#define": cchAliasMax, cchUsrNameMax,
+			  cchProdNameMax, cchSnMax, cchVersionMax, cchDvcNameMax,
+			  cchDtpStringMax, cchErcMax, cchErcMsgMax. This allows these
+			  symbols to be used as initializers in C applications.
+			- The definition of the "hifInvalid" symbol was changed from
+			  "const HIF" to "#define" so that this symbol may be used as
+			  an intializer in C applications.
+			- The definition of dcapJtag was changed from
+			  "const DCAP dcapJtag = dcapJtg;" to
+			  "const DCAP dcapJtag = 0x00000001;" to prevent C applications
+			  from failing to compile.
+			
+	2. Changed Makefile syntax to prevent compilation errors that were
+	   occuring in newer Linux distributions.
+
+Adept SDK for Linux v2.2.1 (12/19/2012):
+	1. The following modifications were made to the include files:
+		djtg.h
+			- added definition of new port property bits:
+			  dprpJtgBatch, and dprpJtgSetAuxReset
+			- added definition of batch property bits:
+			  djbpWaitUs, and djbpSetAuxReset
+			- added definition of batch commands
+			- added declaration of functions used for performing batch
+			  transactions: DjtgBatch, and DjtgGetBatchProperties
+			- added declaration of function used to manipulate an Auxiliary
+			  Reset Pin: DjtgSetAuxReset
+			
+	2. Updated documentation for DJTG
+
+Adept SDK for Linux v2.1.1 (07/17/2012):
+	1. The following modifications were made to the include files:
+		daci.h
+			- removed ddefinition of DPCAPI
+			
+		daio.h
+			- removed ddefinition of DPCAPI
+			
+		demc.h
+			- removed ddefinition of DPCAPI
+			
+		depp.h
+			- removed ddefinition of DPCAPI
+			
+		dgio.h
+			- removed ddefinition of DPCAPI
+			
+		djtg.h
+			- removed ddefinition of DPCAPI
+			- added definition of new port property bits:
+			  dprpJtgTransBuffering, dprpJtgWait, dprpJtgDelayCnt,
+			  dprpJtgReadyCnt, dprpJtgEscape, dprpJtgMScan, dprpJtgOScan0,
+			  dprpJtgOScan1, dprpJtgOScan2, dprpJtgOScan3, dprpJtgOScan4,
+			  dprpJtgOScan5, dprpJtgOScan6, dprpJtgOScan7, and
+			  dprpJtgCheckPacket
+			- added definition of symbols used for setting scan format
+			- added definition of symbols used for performing escape
+			  sequences
+			- added declaration of functions used for performing
+			  transaction buffering: DjtgEnableTransBuffering, and
+			  DjtgSyncBuffer
+			- added declaration of function for performing hardware based
+			  delays: DjtgWait
+			- added declaration of IEEE 1149.7-2009 functions:
+			  DjtgSetScanFormat, DjtgGetScanFormat, DjtgSetReadyCnt,
+			  DjtgGetReadyCnt, DjtgSetDelayCnt, DjtgGetDelayCnt,
+			  DjtgCheckPacket, and DjtgEscape
+			  
+		dmgr.h
+			- definition of DPCAPI removed
+			
+		dmgt.h
+			- definition of DPCAPI removed
+			
+		dpcdecl.h
+			- added definition of DPCAPI
+			- added typedef for UCHAR (Linux only)
+			- changed definition of cchErcMax from 16 to 48 characters
+			- added definition of dcapPti
+			- extended the definition of DTP (device type) to include both
+			  transport type (TPT) and protocol (PTC)
+			- added definition of transport types
+			- added definition of protocols
+			- added macro for converting to a transport type (TPT) from a
+			  device type (DTP)
+			- added macro for converting to a protocol (PTC) from a device
+			  type (DTP)
+			- added macro for converting to a device type (DTP) from a
+			  transport type (TPT) and protocol (PTC)
+			- added definition of new error code: ercCorruptInstallation
+			
+		dpcutil.h
+			- added definition of DPCPPAPI
+			
+		dpio.h
+			- definition of DPCAPI removed
+			
+		dspi.h
+			- definition of DPCAPI removed
+			- added definition of new port property bits:
+			  dprpSpiStartEndDelay
+			- added declaration of new API functions: DspiSetStartEndDelay,
+			  and DspiGetStartEndDelay
+			  
+		dstm.h
+			- definition of DPCAPI removed
+			
+		dtwi.h
+			- definition of DPCAPI removed
+			
+	2. Updated documentation for DJTG and DSPI
+	
+	3. Added "DjtgTwoWireDemo" to the "samples/djtg" directory. This
+	   project demonstrates how to use the JTAG-HS2 and JTAG-SMT2 to
+	   communicate with an IEEE 1149.7-2009 compatible target in two wire
+	   mode.
+
+Adept SDK for Linux v2.0.1 (09/02/2012):
+	1. Initial release of Adept SDK for Linux
+
+
+Author
+======
+
+Digilent, Inc.
+support@digilentinc.com
+
