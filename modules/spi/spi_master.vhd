@@ -58,7 +58,7 @@ ARCHITECTURE logic OF spi_master IS
   SIGNAL tx_buffer   : STD_LOGIC_VECTOR(d_width-1 DOWNTO 0); --transmit data buffer
   SIGNAL last_bit_rx : INTEGER RANGE 0 TO d_width*2;         --last rx data bit location
 BEGIN
-  PROCESS(clock, reset_n)
+  PROCESS(clock)
   BEGIN
     IF(clock'EVENT AND clock = '1') THEN
       CASE state IS               --state machine
