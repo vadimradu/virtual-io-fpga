@@ -14,7 +14,7 @@ ENTITY spi_interface IS
     mosi    : OUT    STD_LOGIC);                             --master out, slave in
 END spi_interface;
 
-ARCHITECUTRE BEHAVIORAL oft spi_interface is
+ARCHITECTURE BEHAVIORAL of spi_interface is
 
 --signals needed
   signal enable_spi   : std_logic;
@@ -54,15 +54,15 @@ ARCHITECUTRE BEHAVIORAL oft spi_interface is
     
     process (cfg_reg) is
     begin
-      case cfg_reg(5 downto 3):
-        when '000'=> clk_div:= 25000;
-        when '001'=> clk_div:= 2500;
-        when '010'=> clk_div:= 500;
-        when '011'=> clk_div:= 250;
-        when '100'=> clk_div:= 50;
-        when '101'=> clk_div:= 25;
-        when '110'=> clk_div:= 12;
-        when '111'=> clk_div:= 6;
+      case cfg_reg(5 downto 3) is
+        when 000=> clk_div:= 25000;
+        when 001=> clk_div:= 2500;
+        when 010=> clk_div:= 500;
+        when 011=> clk_div:= 250;
+        when 100=> clk_div:= 50;
+        when 101=> clk_div:= 25;
+        when 110=> clk_div:= 12;
+        when 111=> clk_div:= 6;
         when others=>clk_div:= 0;
       end case;
     end process;
