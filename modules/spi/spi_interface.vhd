@@ -33,13 +33,11 @@ ARCHITECTURE BEHAVIORAL of spi_interface is
 
 --signals needed
   signal enable_spi   : std_logic;
-  signal reset_n_spi  : std_logic;
   signal busy_spi     : std_logic; --should be linked to a global reg for status flags.
   signal cpol_spi     : std_logic;
   signal cpha_spi     : std_logic;
-  signal cont_spi     : std_logic;
+  signal cont_spi     : std_logic :='0';
   signal clk_div      : integer;
-  signal addr         : integer;
   
 --components needed
   component spi_master is
