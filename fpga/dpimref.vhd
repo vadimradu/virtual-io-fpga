@@ -69,7 +69,7 @@ entity dpimref is
         dstb 	: in std_logic;
         pwr 	: in std_logic;
         pwait 	: out std_logic;
-		  data_regs : inout data_regs_array);
+		  data_regs : inout data_regs_array(0 to addr));
 end dpimref;
 
 architecture Behavioral of dpimref is
@@ -157,7 +157,7 @@ begin
 	busEppOut <= "00000000" or regEppAdr when ctlEppAstb = '0' else busEppData;
 
 	-- Decode the address register and select the appropriate data register
-	busEppData <=	data_regs(conv_integer(unsigned(regEppAdr))).data;
+	busEppData <=	data_regs(conv_integer(regEppAdr)).data;
 
     ------------------------------------------------------------------------
 	-- EPP Interface Control State Machine
@@ -284,8 +284,9 @@ begin
 	process (clkMain, regEppAdr, ctlEppDwr, busEppIn)
 		begin
 			if clkMain = '1' and clkMain'Event then
-				if ctlEppDwr = '1' and regEppAdr = "0000" then
-					data_regs(conv_integer(unsigned(regEppAdr))).data <= busEppIn;
+				if ctlEppDwr = '1' then
+					
+					data_regs(conv_integer(regEppAdr)).data <= busEppIn;
 				end if;
 			end if;
 		end process;

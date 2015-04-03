@@ -9,7 +9,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-
+use ieee.numeric_std.all;
 package reg_spec is
 
 	type data_regs_type is record
@@ -17,7 +17,7 @@ package reg_spec is
    end record data_regs_type;
 
    -- unconstrained array of regs_data_type
-   type data_regs_array is array (natural range <>) of data_regs_type;
+   type data_regs_array is array (integer range <>) of data_regs_type;
 
 end reg_spec;
 
